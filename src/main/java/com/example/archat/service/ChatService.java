@@ -5,12 +5,17 @@ import com.example.archat.model.repository.ChatRepository;
 import com.example.archat.model.repository.InMemoryChatRepository;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 public class ChatService {
     private final ChatRepository chatRepository;
-    public ChatService() {
+    private ChatService() {
         //ChatService - InMemoryChatService
         this.chatRepository = InMemoryChatRepository.getInstance();
+    }
+    private static ChatService instance = new ChatService();
+    public static ChatService getInstance() {
+        return instance;
     }
     public void sendMessage(Chat chat){
         chatRepository.save(chat);
@@ -28,5 +33,8 @@ public class ChatService {
     }
     public String useAi(Chat chat){
         return "%s 라고 하셨네요".formatted(chat.message());
+    }
+    public List<Chat> readHistory(String userId){
+        return chatRepository.findAllByUserId(userId);
     }
 }
